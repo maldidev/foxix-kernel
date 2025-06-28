@@ -21,7 +21,6 @@ char input_buffer[128];
 uint8_t input_pos = 0;
 bool show_cursor = true;
 
-// File structure definition
 typedef struct {
     char name[MAX_FILENAME_LEN];
     char content[MAX_FILE_SIZE];
@@ -29,23 +28,19 @@ typedef struct {
     bool exists;
 } File;
 
-// Simple filesystem structure
 typedef struct {
     File files[MAX_FILES];
     uint8_t file_count;
 } Filesystem;
 
-// Global filesystem instance
 Filesystem fs;
 
-// Forward declarations
 void print(const char* str);
 void putchar(char c);
 void clear_screen();
 void show_prompt();
 bool create_file(const char* name, const char* content);
 
-// String function implementations
 int strcmp(const char* a, const char* b) {
     while (*a && *b && *a == *b) { a++; b++; }
     return *(unsigned char*)a - *(unsigned char*)b;
@@ -241,7 +236,7 @@ void process_command() {
     if (strcmp(input_buffer, "clear") == 0) {
         clear_screen();
     }
-    else if (strncmp(input_buffer, "echo ", 5) == 0) {
+    else if (strncmp(input_buffer, "echo", 5) == 0) {
         echo_command(input_buffer + 5);
     }
     else if (strcmp(input_buffer, "minifetch") == 0) {
@@ -253,14 +248,13 @@ void process_command() {
     else if (strcmp(input_buffer, "ls") == 0) {
         list_files();
     }
-    else if (strncmp(input_buffer, "cat ", 4) == 0) {
+    else if (strncmp(input_buffer, "cat", 4) == 0) {
         display_file(input_buffer + 4);
     }
-    else if (strncmp(input_buffer, "create ", 7) == 0) {
-        // Simple create command: create filename content
+    else if (strncmp(input_buffer, "create", 7) == 0) {
         char* space = strchr(input_buffer + 7, ' ');
         if (space) {
-            *space = '\0'; // Split filename and content
+            *space = '\0';
             create_file(input_buffer + 7, space + 1);
         } else {
             print("\nUsage: create filename content\n");
@@ -303,8 +297,7 @@ char get_key() {
 
 void foxix_main() {
     clear_screen();
-    print("Foxix Kernel\n");
-    print("============\n\n");
+    minifetch();
 
     // Initialize filesystem
     init_filesystem();
